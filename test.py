@@ -141,7 +141,20 @@ def test_delete_pet():
     
     print("===> DELETE /pet/{petId} test cases passed.")
 
+def test_get_inventory():
+    """Test the /store/inventory endpoint to ensure it returns valid inventory data."""
+    url = f"{home_url}/store/inventory"
+    response = requests.get(url)
+    
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    
+    json_data = response.json()
+    assert isinstance(json_data, dict), "Response should be a dictionary"
+    
 
+    print(f'GET inventory: {json_data}')
+
+    print("===> GET /store/inventory test cases passed.")
 
 # Run the test
 if __name__ == "__main__":
@@ -157,3 +170,4 @@ if __name__ == "__main__":
     test_get_pet_by_id()
     test_post_update_pet_by_id()
     test_delete_pet()
+    test_get_inventory()

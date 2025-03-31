@@ -101,17 +101,18 @@ class OpenAPIHandler():
 
                 elif request.method == "GET" or request.method == "DELETE":
                     try:
-                        for param in spec["parameters"]:
-                            # print(f'GET receive param: {param}')
-                            if param["in"] == "query":
+                        if "parameters" in spec:
+                            for param in spec["parameters"]:
+                                # print(f'GET receive param: {param}')
+                                if param["in"] == "query":
 
-                                context["body"][param["name"]] = request.args.getlist(param["name"])
-                            elif param["in"] == "path":
-                                print(f'kwargs: {kwargs}, param["name"]: {param["name"]}')
-                                print(kwargs.get(param["name"]))
-                                context["body"][param["name"]] = kwargs.get(param["name"])
+                                    context["body"][param["name"]] = request.args.getlist(param["name"])
+                                elif param["in"] == "path":
+                                    print(f'kwargs: {kwargs}, param["name"]: {param["name"]}')
+                                    print(kwargs.get(param["name"]))
+                                    context["body"][param["name"]] = kwargs.get(param["name"])
 
-                            validate(instance=context["body"][param["name"]], schema=param["schema"], resolver=self.resolver)
+                                validate(instance=context["body"][param["name"]], schema=param["schema"], resolver=self.resolver)
                     except ValidationError as e:
                         return jsonify({"error": "Invalid ID supplied"}), 400
                 

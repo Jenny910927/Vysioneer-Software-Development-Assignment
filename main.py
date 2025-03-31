@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from OpenAPIHandler import OpenAPIHandler
 from Exceptions import NotFoundException, InvalidIDException, InvalidInputException
 from pet_uitls import update_pet, add_pet, find_pets_by_status, find_pets_by_tags, get_pet_by_id, update_pet_with_form, delete_pet
+from store_utils import get_inventory
+
 
 openAPI_path = "openapi.yaml"
 app = Flask(__name__)
@@ -105,6 +107,13 @@ def deletePet(context):
     except Exception as e:
         raise e
 
+@module.operation('getInventory')
+def getInventory(context):
+    # print(f'GET receive petId {id}')
+    inventory = get_inventory()
+    print(f"Finish getInventory")
+    return jsonify(inventory), 200
+    
 
 
 module.set_routes()
