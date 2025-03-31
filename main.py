@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from OpenAPIHandler import OpenAPIHandler
 from Exceptions import NotFoundException, InvalidIDException, InvalidInputException
 from pet_uitls import update_pet, add_pet, find_pets_by_status, find_pets_by_tags, get_pet_by_id, update_pet_with_form, delete_pet
-from store_utils import get_inventory
+from store_utils import get_inventory, place_order
 
 
 openAPI_path = "openapi.yaml"
@@ -114,6 +114,20 @@ def getInventory(context):
     print(f"Finish getInventory")
     return jsonify(inventory), 200
     
+
+@module.operation('placeOrder')
+def placeOrder(context):
+    try:
+        order = context["body"]
+        print(f'POST receive order: {order}')
+        place_order(order)
+        print(f"Finish getInventory")
+        return jsonify(order), 200
+    except (InvalidInputException, NotFoundException):
+        return jsonify({"error": "Invalid Order"}), 400
+    except Exception as e:
+        raise e
+
 
 
 module.set_routes()

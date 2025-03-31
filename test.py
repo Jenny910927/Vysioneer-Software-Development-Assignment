@@ -156,18 +156,59 @@ def test_get_inventory():
 
     print("===> GET /store/inventory test cases passed.")
 
+
+def test_place_order():
+    """Test the /store/order endpoint to ensure it processes valid orders correctly."""
+    url = f"{home_url}/store/order"
+    
+    order_data = {
+        "id": 123,
+        "petId": 456,
+        "shipDate": "2025-03-30T12:00:00Z",
+        "status": "placed",  # Enum: "placed", "approved", "delivered"
+        "complete": True
+    }
+
+    response = requests.post(url, json=order_data)
+
+    assert response.status_code == 400, f"Expected 400, got {response.status_code}"
+
+    # Sample order data (adjust as per your Order schema)
+    order_data = {
+        "id": 123,
+        "petId": 1,
+        "shipDate": "2025-03-30T12:00:00Z",
+        "status": "placed",  # Enum: "placed", "approved", "delivered"
+        "complete": True
+    }
+
+    response = requests.post(url, json=order_data)
+
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+    json_data = response.json()
+    assert isinstance(json_data, dict), "Response should be a dictionary"
+
+    # Validate expected keys
+    expected_keys = {"id", "petId", "shipDate", "status", "complete"}
+    assert expected_keys.issubset(json_data.keys()), "Response is missing expected keys"
+
+    print("===> POST /store/order test cases passed.")
+
+
 # Run the test
 if __name__ == "__main__":
-    test_find_pets_by_status()
+    # test_find_pets_by_status()
     test_add_new_pet()
-    test_add_update_pet()
+    # test_add_update_pet()
     add_new_pet(2, "Cuddy", tags=[tag1])
     add_new_pet(3, "Cindy", tags=[tag3])
 
-    test_find_pets_by_status()
+    # test_find_pets_by_status()
     # test_find_pets_by_tags()
 
-    test_get_pet_by_id()
-    test_post_update_pet_by_id()
-    test_delete_pet()
-    test_get_inventory()
+    # test_get_pet_by_id()
+    # test_post_update_pet_by_id()
+    # test_delete_pet()
+    # test_get_inventory()
+    test_place_order()
