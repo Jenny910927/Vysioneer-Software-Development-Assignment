@@ -1,8 +1,10 @@
 from database import pet_db
-from Exceptions import NotFoundException, InvalidInputException
+from Exceptions import NotFoundException, InvalidInputException, InvalidIDException
 
 def update_pet(pet):
     pet_id = pet.get("id")
+    if not isinstance(pet_id, int) or pet_id < 0:
+        raise InvalidIDException("Invalid ID supplied")
     if pet_id not in pet_db:
         raise NotFoundException("Pet not found")
     pet_db[pet_id] = pet
@@ -16,7 +18,7 @@ def add_pet(pet):
     print(f'\npet_db: {pet_db}\n')
 
 def find_pets_by_status(status):
-    print(f'GET status: {status}')
+    # print(f'GET status: {status}')
     
     for s in status:
         if s not in ["available", "pending", "sold"]:
@@ -27,3 +29,54 @@ def find_pets_by_status(status):
         if pet["status"] in status:
             fliter_pets.append(pet)
     return fliter_pets
+
+def find_pets_by_tags(tags):
+    fliter_pets = []
+    
+    for pet in pet_db.values():
+        # print(f'pet: {pet}')
+        if is_sublist_of(tags, pet["tags"]):
+            fliter_pets.append(pet)
+    return fliter_pets
+def is_sublist_of(list1, list2): # True if list1 is sublist of list2
+    # print(f'compare {list1} || {list2}')
+    for element1 in list1:
+        if not any(element1["id"] == element2["id"] for element2 in list2):
+            return False
+    return  True
+
+def get_pet_by_id(id):
+    # print(f'find pet id: {id}')
+    if id < 0:
+        raise InvalidIDException("Invalid ID supplied")
+    
+    if id not in pet_db:
+        # print(f'pet not found')
+        raise NotFoundException("Pet not found")
+    # print(f'id in pet_db, {pet_db[id]}')
+    return pet_db[id]
+
+
+def update_pet_with_form(id, name, status):
+    if id < 0:
+        raise InvalidIDException("Invalid ID supplied")
+    
+    if id not in pet_db:
+        raise NotFoundException("Pet not found")
+    
+    pet_db[id]["name"] = name
+    pet_db[id]["status"] = status
+    print(f'\npet_db: {pet_db}\n')
+    return 
+
+
+def delete_pet(id):
+    if id < 0:
+        raise InvalidIDException("Invalid ID supplied")
+    if id not in pet_db:
+        raise NotFoundException("Pet not found")
+    
+    pet_db.pop(id)
+    print(f'\npet_db: {pet_db}\n')
+    return 
+    
