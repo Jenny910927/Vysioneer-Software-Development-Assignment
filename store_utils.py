@@ -19,3 +19,31 @@ def place_order(order):
     order_db[order_id] = order
     pet_db[petId]["stauts"] = "sold"
     print(f'\norder_db: {order_db}\n')
+
+def is_valid_orderId(id):
+    return True if id.isdigit() and int(id) >= 1 and int(id) <= 10 else False
+    
+
+def get_order_by_id(id):
+    if not is_valid_orderId(id):
+        raise InvalidIDException("Invalid ID supplied")
+    
+    id = int(id)
+    
+    if id not in order_db:
+        raise NotFoundException("Order not found")
+    return order_db[id]
+
+
+
+def delete_order(id):
+    if not is_valid_orderId(id):
+        raise InvalidIDException("Invalid ID supplied")
+    
+    id = int(id)
+    if id not in order_db:
+        raise NotFoundException("Order not found")
+    
+    order_db.pop(id)
+    return 
+    

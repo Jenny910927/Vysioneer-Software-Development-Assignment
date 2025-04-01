@@ -39,7 +39,7 @@ class OpenAPIHandler():
             path, method, spec = self.find_spec(operation_id)
             if path.find('{') != -1:
                 path = path.replace("{", "<").replace("}", ">")
-                path = path.replace("petId", "int:petId")
+                # path = path.replace("petId", "int:petId")
             self.route_to_operation_id[f'{path}:{method}'] = operation_id
             print(f'match route to operation: {path}:{method} = {operation_id}')
             
@@ -105,14 +105,14 @@ class OpenAPIHandler():
                             for param in spec["parameters"]:
                                 # print(f'GET receive param: {param}')
                                 if param["in"] == "query":
-
                                     context["body"][param["name"]] = request.args.getlist(param["name"])
                                 elif param["in"] == "path":
                                     print(f'kwargs: {kwargs}, param["name"]: {param["name"]}')
                                     print(kwargs.get(param["name"]))
                                     context["body"][param["name"]] = kwargs.get(param["name"])
-
-                                validate(instance=context["body"][param["name"]], schema=param["schema"], resolver=self.resolver)
+                                
+                                print(f'Validate: {context["body"][param["name"]]}, schema: {param["schema"]}')
+                                # validate(instance=context["body"][param["name"]], schema=param["schema"], resolver=self.resolver)
                     except ValidationError as e:
                         return jsonify({"error": "Invalid ID supplied"}), 400
                 

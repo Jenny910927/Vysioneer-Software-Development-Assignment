@@ -45,10 +45,17 @@ def is_sublist_of(list1, list2): # True if list1 is sublist of list2
             return False
     return  True
 
+
+
+def is_valid_petId(id):
+    return True if id.isdigit() and int(id) > 0 else False
+    
 def get_pet_by_id(id):
     # print(f'find pet id: {id}')
-    if id < 0:
+    if not is_valid_petId(id):
         raise InvalidIDException("Invalid ID supplied")
+    
+    id = int(id)    
     
     if id not in pet_db:
         # print(f'pet not found')
@@ -58,7 +65,7 @@ def get_pet_by_id(id):
 
 
 def update_pet_with_form(id, name, status):
-    if id < 0:
+    if not is_valid_petId(id):
         raise InvalidIDException("Invalid ID supplied")
     
     if id not in pet_db:
@@ -71,7 +78,7 @@ def update_pet_with_form(id, name, status):
 
 
 def delete_pet(id):
-    if id < 0:
+    if not is_valid_petId(id):
         raise InvalidIDException("Invalid ID supplied")
     if id not in pet_db:
         raise NotFoundException("Pet not found")

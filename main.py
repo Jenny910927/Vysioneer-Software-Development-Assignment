@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from OpenAPIHandler import OpenAPIHandler
 from Exceptions import NotFoundException, InvalidIDException, InvalidInputException
 from pet_uitls import update_pet, add_pet, find_pets_by_status, find_pets_by_tags, get_pet_by_id, update_pet_with_form, delete_pet
-from store_utils import get_inventory, place_order
+from store_utils import get_inventory, place_order, get_order_by_id, delete_order
 
 
 openAPI_path = "openapi.yaml"
@@ -99,7 +99,7 @@ def deletePet(context):
         # print(f'GET receive petId {id}')
         delete_pet(id)
         print("Finish deletePet")
-        return jsonify({"message": "Update pet successfully"}), 200
+        return jsonify({"message": "Delete pet successfully"}), 200
     except InvalidIDException as e:
         return jsonify({"error": "Invalid ID supplied"}), 400
     except NotFoundException as e:
@@ -125,6 +125,37 @@ def placeOrder(context):
         return jsonify(order), 200
     except (InvalidInputException, NotFoundException):
         return jsonify({"error": "Invalid Order"}), 400
+    except Exception as e:
+        raise e
+
+
+@module.operation('getOrderById')
+def getOrderById(context):
+    try:
+        id = context["body"]["orderId"]
+        print(f'GET receive orderId {id}')
+        order = get_order_by_id(id)
+        print(f"Finish getOrderById, order = {order}")
+        return jsonify(order), 200
+    except InvalidIDException as e:
+        return jsonify({"error": "Invalid ID supplied"}), 400
+    except NotFoundException as e:
+        return jsonify({"error": "Pet not found"}), 404
+    except Exception as e:
+        raise e
+
+
+@module.operation('deleteOrder')
+def deleteOrder(context):
+    try:
+        id = context["body"]["orderId"]
+        delete_order(id)
+        print("Finish deleteOrder")
+        return jsonify({"message": "Delete order successfully"}), 200
+    except InvalidIDException as e:
+        return jsonify({"error": "Invalid ID supplied"}), 400
+    except NotFoundException as e:
+        return jsonify({"error": "Pet not found"}), 404
     except Exception as e:
         raise e
 
