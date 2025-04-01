@@ -133,7 +133,7 @@ def test_post_update_pet_by_id():
     print("===> POST /pet/{petId} test cases passed.")
 
 def test_delete_pet():
-    pet_id = 1  # Assume pet with ID 1 exists
+    pet_id = 2  # Assume pet with ID 2 exists
     url = home_url + f"pet/{pet_id}"
 
     response = requests.delete(url)
@@ -214,7 +214,7 @@ def test_get_order_by_id():
 
     print("===> GET /store/order/{orderId} test cases passed.")
 
-def test_delete_pet():
+def test_delete_order():
     order_id = 1  # Assume pet with ID 1 exists
     url = home_url + f"store/order/{order_id}"
 
@@ -227,21 +227,21 @@ def test_delete_pet():
 
 # Run the test
 if __name__ == "__main__":
-    # test_find_pets_by_status()
+    test_find_pets_by_status()
     test_add_new_pet()
-    # test_add_update_pet()
+    test_add_update_pet()
     add_new_pet(2, "Cuddy", tags=[tag1])
     add_new_pet(3, "Cindy", tags=[tag3])
 
-    # test_find_pets_by_status()
+    test_find_pets_by_status()
     # test_find_pets_by_tags()
 
-    # test_get_pet_by_id()
-    # test_post_update_pet_by_id()
-    # test_delete_pet()
+    test_get_pet_by_id()
+    test_post_update_pet_by_id()
+    test_delete_pet()
 
-    
+
     # test_get_inventory()
     test_place_order()
     test_get_order_by_id()
-    test_delete_pet()
+    test_delete_order()
