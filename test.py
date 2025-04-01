@@ -99,7 +99,7 @@ def test_get_pet_by_id():
     url = home_url + f"pet/{pet_id}"
 
     response = requests.get(url)
-    print(f'response: {response}')
+    # print(f'response: {response}')
     assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
     
     pet = response.json()
@@ -133,7 +133,7 @@ def test_post_update_pet_by_id():
     print("===> POST /pet/{petId} test cases passed.")
 
 def test_delete_pet():
-    pet_id = 1  # Assume pet with ID 1 exists
+    pet_id = 2  # Assume pet with ID 2 exists
     url = home_url + f"pet/{pet_id}"
 
     response = requests.delete(url)
@@ -162,7 +162,7 @@ def test_place_order():
     url = f"{home_url}/store/order"
     
     order_data = {
-        "id": 123,
+        "id": 1,
         "petId": 456,
         "shipDate": "2025-03-30T12:00:00Z",
         "status": "placed",  # Enum: "placed", "approved", "delivered"
@@ -175,7 +175,7 @@ def test_place_order():
 
     # Sample order data (adjust as per your Order schema)
     order_data = {
-        "id": 123,
+        "id": 1,
         "petId": 1,
         "shipDate": "2025-03-30T12:00:00Z",
         "status": "placed",  # Enum: "placed", "approved", "delivered"
@@ -196,19 +196,52 @@ def test_place_order():
     print("===> POST /store/order test cases passed.")
 
 
+def test_get_order_by_id():
+    order_id = 1  # Assume pet with ID 1 exists
+    url = home_url + f"store/order/{order_id}"
+
+    response = requests.get(url)
+    print(f'response: {response}')
+    assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
+    
+    pet = response.json()
+    assert pet['id'] == order_id, f"Expected pet ID {order_id}, but got {pet['id']}"
+
+    # Test: Get pet by non-existing ID (assume pet with ID 999 does not exist)
+    non_existing_order_id = 5
+    response = requests.get(f"http://localhost:5000/pet/{non_existing_order_id}")
+    assert response.status_code == 404, f"Expected status code 404, but got {response.status_code}"
+
+    print("===> GET /store/order/{orderId} test cases passed.")
+
+def test_delete_order():
+    order_id = 1  # Assume pet with ID 1 exists
+    url = home_url + f"store/order/{order_id}"
+
+    response = requests.delete(url)
+    assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
+    
+    print("===> DELETE /store/order/{orderId} test cases passed.")
+
+
+
 # Run the test
 if __name__ == "__main__":
-    # test_find_pets_by_status()
+    test_find_pets_by_status()
     test_add_new_pet()
-    # test_add_update_pet()
+    test_add_update_pet()
     add_new_pet(2, "Cuddy", tags=[tag1])
     add_new_pet(3, "Cindy", tags=[tag3])
 
-    # test_find_pets_by_status()
+    test_find_pets_by_status()
     # test_find_pets_by_tags()
 
-    # test_get_pet_by_id()
-    # test_post_update_pet_by_id()
-    # test_delete_pet()
+    test_get_pet_by_id()
+    test_post_update_pet_by_id()
+    test_delete_pet()
+
+
     # test_get_inventory()
     test_place_order()
+    test_get_order_by_id()
+    test_delete_order()

@@ -8,18 +8,16 @@ def update_pet(pet):
     if pet_id not in pet_db:
         raise NotFoundException("Pet not found")
     pet_db[pet_id] = pet
-    print(f'\npet_db: {pet_db}\n')
+    # print(f'\npet_db: {pet_db}\n')
 
 def add_pet(pet):
     pet_id = pet.get("id")
     if pet_id in pet_db:
         raise InvalidInputException("Pet already exist")
     pet_db[pet_id] = pet
-    print(f'\npet_db: {pet_db}\n')
+    # print(f'\npet_db: {pet_db}\n')
 
 def find_pets_by_status(status):
-    # print(f'GET status: {status}')
-    
     for s in status:
         if s not in ["available", "pending", "sold"]:
             raise InvalidInputException("Invalid status value")
@@ -34,49 +32,52 @@ def find_pets_by_tags(tags):
     fliter_pets = []
     
     for pet in pet_db.values():
-        # print(f'pet: {pet}')
         if is_sublist_of(tags, pet["tags"]):
             fliter_pets.append(pet)
     return fliter_pets
 def is_sublist_of(list1, list2): # True if list1 is sublist of list2
-    # print(f'compare {list1} || {list2}')
     for element1 in list1:
         if not any(element1["id"] == element2["id"] for element2 in list2):
             return False
     return  True
 
+
+
+def is_valid_petId(id):
+    return True if id.isdigit() and int(id) > 0 else False
+    
 def get_pet_by_id(id):
-    # print(f'find pet id: {id}')
-    if id < 0:
+    if not is_valid_petId(id):
         raise InvalidIDException("Invalid ID supplied")
     
+    id = int(id)    
+    
     if id not in pet_db:
-        # print(f'pet not found')
         raise NotFoundException("Pet not found")
-    # print(f'id in pet_db, {pet_db[id]}')
     return pet_db[id]
 
 
 def update_pet_with_form(id, name, status):
-    if id < 0:
+    if not is_valid_petId(id):
         raise InvalidIDException("Invalid ID supplied")
-    
+    id = int(id) 
     if id not in pet_db:
         raise NotFoundException("Pet not found")
     
     pet_db[id]["name"] = name
     pet_db[id]["status"] = status
-    print(f'\npet_db: {pet_db}\n')
+    # print(f'\npet_db: {pet_db}\n')
     return 
 
 
 def delete_pet(id):
-    if id < 0:
+    if not is_valid_petId(id):
         raise InvalidIDException("Invalid ID supplied")
+    id = int(id) 
     if id not in pet_db:
         raise NotFoundException("Pet not found")
     
     pet_db.pop(id)
-    print(f'\npet_db: {pet_db}\n')
+    # print(f'\npet_db: {pet_db}\n')
     return 
     
